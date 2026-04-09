@@ -3,7 +3,7 @@ import type { Veiculo } from "../types/types"
 
 export const VeiculoService = () => {
   const addVeiculo = async (data: Veiculo): Promise<Veiculo> => {
-    const veiculo = await http.post<Veiculo>('/Veiculo/', data);
+    const veiculo = await http.post<Veiculo>('/Veiculo', data);
     return veiculo.data;
   }
 

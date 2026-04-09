@@ -1,5 +1,5 @@
 export interface Veiculo {
-  id: string;
+  id?: string;
   modelo: string;
   anoFabricacao: number;
   placa: string;

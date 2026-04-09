@@ -4,7 +4,7 @@
 
     <v-card class="pa-4 mb-6" elevation="2">
       <v-row align="center">
-        <v-col cols="12" md="8">
+        <v-col cols="12" md="8" class="d-flex flex-column ga-5">
           <v-text-field
             label="modelo do veiculo"
             v-model="veiculoForm.modelo"
@@ -75,7 +75,7 @@
                 color="error"
                 variant="text"
                 icon="mdi-delete"
-                @click="remove(c.id ?? '')"
+                @click="remove(c.id!)"
               >
               </v-btn>
             </td>
@@ -99,6 +99,24 @@
           <v-text-field
             label="Novo modelo do veiculo"
             v-model="veiculoForm.modelo"
+            variant="outlined"
+            @keyup.enter="salvarEdicao"
+          />
+        </v-card-text>
+
+        <v-card-text class="pa-4 mt-2">
+          <v-text-field
+            label="Ano de fabricação do veiculo"
+            v-model="veiculoForm.anoFabricacao"
+            variant="outlined"
+            @keyup.enter="salvarEdicao"
+          />
+        </v-card-text>
+
+        <v-card-text class="pa-4 mt-2">
+          <v-text-field
+            label="Nova Placa do Veículo"
+            v-model="veiculoForm.placa"
             variant="outlined"
             @keyup.enter="salvarEdicao"
           />
@@ -129,7 +147,6 @@ import type { Veiculo } from "../types/types";
 const service = VeiculoService();
 const veiculos = ref<Veiculo[]>([]);
 const veiculoForm = ref<Veiculo>({
-  id: "",
   anoFabricacao: 0,
   modelo: "",
   placa: "",
@@ -156,8 +173,8 @@ const carregarDados = async () => {
 const create = async () => {
   if (
     !veiculoForm.value.modelo.trim() ||
-    veiculoForm.value.placa ||
-    veiculoForm.value.anoFabricacao
+    !veiculoForm.value.placa ||
+    !veiculoForm.value.anoFabricacao
   )
     return;
 
@@ -193,6 +210,7 @@ const abrirModalEditar = (c: Veiculo) => {
     return;
   }
 
+  veiculoForm.value.id = c.id;
   veiculoForm.value.modelo = c.modelo;
   veiculoForm.value.anoFabricacao = c.anoFabricacao;
   veiculoForm.value.placa = c.placa;
@@ -209,6 +227,9 @@ const salvarEdicao = async () => {
   try {
     await service.update(veiculoForm.value.id, veiculoForm.value);
 
+    veiculoForm.value.id = "";
+    veiculoForm.value.anoFabricacao = 0;
+    veiculoForm.value.placa = "";
     veiculoForm.value.modelo = "";
 
     dialogEdit.value = false;
